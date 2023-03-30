@@ -1,5 +1,7 @@
+import Rotas from "./rotas";
+
 function App() {
-  return <h1>Ola Mundo!</h1>;
+  return <Rotas />;
 }
 
 export default App;
