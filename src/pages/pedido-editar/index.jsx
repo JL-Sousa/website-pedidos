@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Navbar } from "../../components/Navbar";
 import "./styles.css";
+import { v4 as uuidv4 } from "uuid";
 
 export function PedidoEditar() {
   const lista_clientes = [
@@ -19,7 +21,7 @@ export function PedidoEditar() {
     { id_cond_pagto: 2, cond_pagto: "45 Dias" },
   ];
 
-  const produtos = [
+  const [produtos, setProdutos] = useState([
     {
       id_item: 1,
       id_produto: 1,
@@ -36,9 +38,34 @@ export function PedidoEditar() {
       vl_unit: 300,
       vl_total: 600,
     },
-  ];
+  ]);
 
   const total_pedido = 5000;
+
+  function adicionarProduto() {
+    const prod = {
+      id_item: uuidv4(),
+      id_produto: 0,
+      descricao: "",
+      qtd: 1,
+      vl_unit: 0,
+      vl_total: 0,
+    };
+
+    setProdutos([...produtos, prod]);
+  }
+
+  function excluirProduto(id_item) {
+    const prod = [];
+
+    produtos.map((p) => {
+      if (p.id_item != id_item) {
+        prod.push(p);
+      }
+    });
+
+    setProdutos(prod);
+  }
 
   const lista_produtos = [
     { id_item: 1, id_produto: 1, descricao: "Monitor Dell" },
@@ -152,7 +179,11 @@ export function PedidoEditar() {
                         <input type="text" className="form-control" disabled />
                       </td>
                       <td>
-                        <button type="button" className="btn btn-danger">
+                        <button
+                          type="button"
+                          onClick={(e) => excluirProduto(produto.id_item)}
+                          className="btn btn-danger"
+                        >
                           <i className="bi bi-trash3-fill"></i>
                         </button>
                       </td>
@@ -161,10 +192,18 @@ export function PedidoEditar() {
                 })}
               </tbody>
             </table>
+
+            {produtos.length == 0 ? (
+              <div className="no-item">Nenhum produto cadastrado</div>
+            ) : null}
           </div>
 
           <div className="col-md-6">
-            <button type="button" className="btn btn-sm btn-primary">
+            <button
+              type="button"
+              className="btn btn-sm btn-primary"
+              onClick={adicionarProduto}
+            >
               Adicionar Produto
             </button>
           </div>
